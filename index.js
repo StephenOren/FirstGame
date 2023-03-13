@@ -1,10 +1,13 @@
 // Create the canvas
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
-canvas.width = 512;
-canvas.height = 480; // Make sure you have a background image that is 1000 x 1000 or something that matches the width and height set here.
+canvas.width = 1000;
+canvas.height = 1000; // Make sure you have a background image that is 1000 x 1000 or something that matches the width and height set here.
 document.body.appendChild(canvas);
 
+var ninjaWin = "sounds/slashkutSound.mp3";
+var ninjaCaught = "sounds/SlashSound.mp3";
+var soundNoises = document.getElementById("soundNoise");
 
 
 // Background image
@@ -14,6 +17,23 @@ bgImage.onload = function () {
     bgReady = true;
 };
 bgImage.src = "images/background.png";
+
+// border image L-R
+var blReady = false;
+var blImage = new Image();
+blImage.onload = function () {
+    blReady = true;
+}
+blImage.src = "images/swordLeftRightBorder.jpg";
+
+// border image T-B
+var btReady = false;
+var btImage = new Image();
+btImage.onload = function () {
+    btReady = true;
+}
+btImage.src = "images/BorderTopBottom.jpg";
+
 
 // Hero image
 var heroReady = false;
@@ -31,6 +51,14 @@ monsterImage.onload = function () {
 };
 monsterImage.src = "images/monster.png"; // image of the monster you chase/touch
 
+// Shuriken image obstacle
+var shurikenReady = false;
+var shurikenImage = new Image();
+shurikenImage.onload = function () {
+    shurikenReady = true;
+};
+shurikenImage.src = "images/shuriken.png";
+
 
 // Game objects
 var hero = {
@@ -43,6 +71,25 @@ var monster = {
     x: 0,
     y: 0
 };
+
+
+// Shuriken objects that are the obstacles.
+
+var shuriken1 = {
+        x: 100,
+        y: 100
+    };
+
+var shuriken2 = {
+        x: 300,
+        y: 300
+    };
+
+var shuriken3 = {
+        x: 700,
+        y: 700
+    };
+
 var monstersCaught = 0;
     
 
@@ -84,19 +131,31 @@ addEventListener("keyup", function (e) {
 // draw everything in the main render function
 
 // Update game objects
-var update = function (modifier) {
+var update = function (modifier) {
+    if (38 in keysDown) { // Player holding up
+        hero.y -= hero.speed * modifier;
+        if (hero.y < ( 32) ) {
+            hero.y = 32;
+        }
 
-    if (38 in keysDown && hero.y > 32+4) { //  holding up key
-        hero.y -= hero.speed * modifier;
     }
-    if (40 in keysDown && hero.y < canvas.height - (64 + 4)) { //  holding down key
-        hero.y += hero.speed * modifier;
+    if (40 in keysDown) { // Player holding down
+        hero.y += hero.speed * modifier;
+        if (hero.y > (1000 - ( 125) )) {
+            hero.y = 1000 	 -125;
+        }
     }
-    if (37 in keysDown && hero.x > (32+4)) { // holding left key
-        hero.x -= hero.speed * modifier;
+    if (37 in keysDown) { // Player holding left
+        hero.x -= hero.speed * modifier;
+        if (hero.x < ( 28) ) {
+            hero.x = 28;
+        }
     }
-    if (39 in keysDown && hero.x < canvas.width - (64)) { // holding right key
-        hero.x += hero.speed * modifier;
+    if (39 in keysDown) { // Player holding right
+        hero.x += hero.speed * modifier;
+        if (hero.x > ( 1000 - (32 +50 ) ) ) {
+            hero.x = 1000 - (32 +50 );
+        }
     }
 
 
@@ -107,11 +166,13 @@ var update = function (modifier) {
     // after moving the hero (x and y)
         // Are they touching?
         if (
-            hero.x <= (monster.x + 32)
-            && monster.x <= (hero.x + 32)
-            && hero.y <= (monster.y + 32)
-            && monster.y <= (hero.y + 32)
+            hero.x <= (monster.x + 40)
+            && monster.x <= (hero.x + 40)
+            && hero.y <= (monster.y + 70)
+            && monster.y <= (hero.y + 70)
         ) {
+            soundNoises.src = ninjaCaught; // Plays this sound whenever the two sprites are touching.
+            soundNoises.play();
             ++monstersCaught;       // keep track of our “score”
             reset();       // start a new cycle
         }
@@ -129,6 +190,16 @@ var render = function () {
         ctx.drawImage(bgImage, 0, 0);
     }
 
+    if (btReady) {
+		ctx.drawImage(btImage, 0, 0);
+		ctx.drawImage(btImage, 0, 1000 - 32);
+	}
+	
+	if (blReady) {
+		ctx.drawImage(blImage, 0, 0);
+		ctx.drawImage(blImage, 1000-32, 0);
+	}
+
     if (heroReady) {
             ctx.drawImage(heroImage, hero.x, hero.y);
     }
@@ -136,8 +207,14 @@ var render = function () {
     if (monsterReady) {
             ctx.drawImage(monsterImage, monster.x, monster.y);
     }
+
+    if (shurikenReady) {
+        ctx.drawImage(shurikenImage, shuriken1.x, shuriken1.y);
+        ctx.drawImage(shurikenImage, shuriken2.x, shuriken2.y);
+        ctx.drawImage(shurikenImage, shuriken3.x, shuriken3.y);
+    }
     // Score
-    ctx.fillStyle = "rgb(250, 250, 250)";
+    ctx.fillStyle = "white";
     ctx.font = "24px Helvetica";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
@@ -178,8 +255,14 @@ var reset = function () {
 //Place the monster somewhere on the screen randomly
 // but not in the hedges, Article in wrong, the 64 needs to be 
 // hedge on left 32 + hedge 32 + char 32 = 96
-    monster.x = 32 + (Math.random() * (canvas.width - 96));
-    monster.y = 32 + (Math.random() * (canvas.height - 96));
+    monster.x = 20 + (Math.random() * (canvas.width - 150));
+    monster.y = 20 + (Math.random() * (canvas.height - 148));
+
+    if(monstersCaught === 3) {
+        soundNoises.src = ninjaWin;
+        soundNoises.play(); // Plays the sound when you win.
+        monstersCaught = 0;  
+    }
 };
     
 
