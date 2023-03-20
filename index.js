@@ -42,7 +42,7 @@ var heroImage = new Image();
 heroImage.onload = function () {
     heroReady = true;
 };
-heroImage.src = "images/hero.png"; // Image of the hero you move
+heroImage.src = "images/ninja2.png"; // Image of the hero you move
 
 // Monster image
 var monsterReady = false;
@@ -50,7 +50,7 @@ var monsterImage = new Image();
 monsterImage.onload = function () {
     monsterReady = true;
 };
-monsterImage.src = "images/monster.png"; // image of the monster you chase/touch
+monsterImage.src = "images/hero.png"; // image of the monster you chase/touch
 
 // Shuriken image obstacle
 var shurikenReady = false;
@@ -60,6 +60,33 @@ shurikenImage.onload = function () {
 };
 shurikenImage.src = "images/shuriken.png";
 
+
+var rows = 4;
+var cols = 4;
+
+var trackRight = 3;  // Supposed to be 3
+var trackLeft = 2;   // Supposed to be 2
+
+var trackDown = 1;
+var trackUp = 4;
+
+var spriteSheetWidth = 128;
+var spriteSheetHeight = 192;
+
+var oneSpriteWidth = spriteSheetWidth / cols;
+var oneSpriteHeight = spriteSheetHeight / rows;
+
+var curXFrame = 0; // Start on left side of the sprite sheet
+var framesPerRowCount = 4; // There are 4 frames per row
+
+var UpperLeftXpointOnSpriteSHeet = 0;
+var UpperLeftYpointOnSpriteSHeet = 0; 
+
+var left = false;
+var right = true;
+
+
+let counter = 0;
 
 // Game objects
 var hero = {
@@ -136,6 +163,14 @@ addEventListener("keyup", function (e) {
 
 // Update game objects
 var update = function (modifier) {
+
+    // This will clear the last hero image position when moved that is not shown becuse of background image.
+    ctx.clearRect(hero.x, hero.y, oneSpriteWidth, oneSpriteHeight);
+    left = false;
+    right = false;
+
+
+
     if (38 in keysDown) { // Player holding up
         hero.y -= hero.speed * modifier;
         if (hero.y < ( 32) ) {
@@ -145,8 +180,8 @@ var update = function (modifier) {
     }
     if (40 in keysDown) { // Player holding down
         hero.y += hero.speed * modifier;
-        if (hero.y > (1000 - ( 125) )) {
-            hero.y = 1000 	 -125;
+        if (hero.y > (1000 - ( 70) )) {
+            hero.y = 1000 	 -70;
         }
     }
     if (37 in keysDown) { // Player holding left
@@ -154,15 +189,19 @@ var update = function (modifier) {
         if (hero.x < ( 28) ) {
             hero.x = 28;
         }
+        left = true;
+        right = false;
     }
     if (39 in keysDown) { // Player holding right
         hero.x += hero.speed * modifier;
-        if (hero.x > ( 1000 - (32 +50 ) ) ) {
-            hero.x = 1000 - (32 +50 );
+        if (hero.x > ( 1000 - (10 +50 ) ) ) {
+            hero.x = 1000 - (10 +50 );
         }
+        left = false;
+        right = true;
     }
 
-	shuriken1.x = shuriken1.x + (4 * shuriken1.direction);
+	shuriken1.x = shuriken1.x + (2.5 * shuriken1.direction);
 	if(shuriken1.x > 885){
 		shuriken1.direction = -1;
 	}
@@ -170,7 +209,7 @@ var update = function (modifier) {
 		shuriken1.direction = 1;
 	}
 
-    shuriken2.x = shuriken2.x + (4 * shuriken2.direction);
+    shuriken2.x = shuriken2.x + (2.5 * shuriken2.direction);
 	if(shuriken2.x > 885){
 		shuriken2.direction = -1;
 	}
@@ -178,7 +217,7 @@ var update = function (modifier) {
 		shuriken2.direction = 1;
 	}
 
-    shuriken3.x = shuriken3.x + (4 * shuriken3.direction);
+    shuriken3.x = shuriken3.x + (2.5 * shuriken3.direction);
 	if(shuriken3.x > 885){
 		shuriken3.direction = -1;
 	}
@@ -192,9 +231,9 @@ var update = function (modifier) {
         // Are they touching?
         if (
             hero.x <= (monster.x + 40)
-            && monster.x <= (hero.x + 40)
-            && hero.y <= (monster.y + 70)
-            && monster.y <= (hero.y + 70)
+            && monster.x <= (hero.x + 20)
+            && hero.y <= (monster.y + 90)
+            && monster.y <= (hero.y + 35)
         ) {
             soundNoises.src = ninjaCaught; // Plays this sound whenever the two sprites are touching.
             soundNoises.play();
@@ -206,7 +245,7 @@ var update = function (modifier) {
             hero.x <= (shuriken1.x + 73)
             && shuriken1.x <= (hero.x + 40)
             && hero.y <= (shuriken1.y + 73)
-            && shuriken1.y <= (hero.y + 80)
+            && shuriken1.y <= (hero.y + 30)
         ) {
             soundNoises.src = gameOver;
             soundNoises.play(); 
@@ -220,7 +259,7 @@ var update = function (modifier) {
             hero.x <= (shuriken2.x + 73)
             && shuriken2.x <= (hero.x + 40)
             && hero.y <= (shuriken2.y + 73)
-            && shuriken2.y <= (hero.y + 80)
+            && shuriken2.y <= (hero.y + 30)
         ) {
             soundNoises.src = gameOver;
             soundNoises.play(); 
@@ -234,7 +273,7 @@ var update = function (modifier) {
             hero.x <= (shuriken3.x + 73)
             && shuriken3.x <= (hero.x + 40)
             && hero.y <= (shuriken3.y + 73)
-            && shuriken3.y <= (hero.y + 80)
+            && shuriken3.y <= (hero.y + 30)
         ) {
             soundNoises.src = gameOver;
             soundNoises.play(); 
@@ -242,6 +281,31 @@ var update = function (modifier) {
             keysDown = {}
             monstersCaught = 0;
             reset();
+        }
+
+
+        if (counter == 10) { // adjust this to change "walking speed" of animation
+            curXFrame = ++curXFrame % framesPerRowCount; //Updating the sprite frame index
+            // it will count 0,1,2,0,1,2,0, etc
+            counter = 0;
+        } else {
+            counter++;
+        }
+
+        srcX = curXFrame * oneSpriteWidth; //Calculating the x coordinate for
+        //if left is true, pick Y dim of the correct row
+        if (left) {
+            //calculate srcY
+            srcY = trackLeft * oneSpriteHeight;
+        }
+        //if the right is true, pick Y dim of the correct row
+        if (right) {
+            //calculating y coordinate for spritesheet
+            srcY = trackRight * oneSpriteHeight;
+        }
+        if (left == false && right == false) {
+            srcX = 1 * oneSpriteWidth;
+            srcY = 2 * oneSpriteHeight;
         }
 
 };
@@ -267,8 +331,13 @@ var render = function () {
 		ctx.drawImage(blImage, 1000-32, 0);
 	}
 
+    // if (heroReady) {
+    //         ctx.drawImage(heroImage, hero.x, hero.y);
+    // }
+
     if (heroReady) {
-            ctx.drawImage(heroImage, hero.x, hero.y);
+        //ctx.drawImage(heroImage, hero.x, hero.y);
+        ctx.drawImage(heroImage, srcX, srcY, oneSpriteWidth, oneSpriteHeight, hero.x, hero.y, oneSpriteWidth, oneSpriteHeight);
     }
     
     if (monsterReady) {
