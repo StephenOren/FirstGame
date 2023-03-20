@@ -1,0 +1,17 @@
+#titleScreen {
+    display: block;
+    align-items: center;
+    width: 1000px;
+    height: 1000px;
+    text-align: center; 
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    background-color: black;
+    color: red;
+    font-size: 4rem;
+}
+#startButton {
+    color: black;
+    background-color: red;
+    font-size: 8rem;
+}
+

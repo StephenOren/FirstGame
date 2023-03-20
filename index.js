@@ -1,3 +1,7 @@
+function startGame() {
+//This get rids of the start screen
+document.getElementById('titleScreen').style.display = 'none';
+
 // Create the canvas
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
@@ -64,11 +68,11 @@ shurikenImage.src = "images/shuriken.png";
 var rows = 4;
 var cols = 4;
 
-var trackRight = 3;  // Supposed to be 3
-var trackLeft = 2;   // Supposed to be 2
+var trackRight = 2; 
+var trackLeft = 1;   
 
-var trackDown = 1;
-var trackUp = 4;
+var trackDown = 0;
+var trackUp = 3;
 
 var spriteSheetWidth = 128;
 var spriteSheetHeight = 192;
@@ -84,6 +88,8 @@ var UpperLeftYpointOnSpriteSHeet = 0;
 
 var left = false;
 var right = true;
+var up = false;
+var down = false;
 
 
 let counter = 0;
@@ -168,6 +174,8 @@ var update = function (modifier) {
     ctx.clearRect(hero.x, hero.y, oneSpriteWidth, oneSpriteHeight);
     left = false;
     right = false;
+    up = false;
+    down = false;
 
 
 
@@ -176,13 +184,20 @@ var update = function (modifier) {
         if (hero.y < ( 32) ) {
             hero.y = 32;
         }
-
+        left = false;
+        right = false;
+        up = true;
+        down = false;
     }
     if (40 in keysDown) { // Player holding down
         hero.y += hero.speed * modifier;
         if (hero.y > (1000 - ( 70) )) {
             hero.y = 1000 	 -70;
         }
+        left = false;
+        right = false;
+        up = false;
+        down = true;
     }
     if (37 in keysDown) { // Player holding left
         hero.x -= hero.speed * modifier;
@@ -191,6 +206,8 @@ var update = function (modifier) {
         }
         left = true;
         right = false;
+        up = false;
+        down = false;
     }
     if (39 in keysDown) { // Player holding right
         hero.x += hero.speed * modifier;
@@ -199,6 +216,8 @@ var update = function (modifier) {
         }
         left = false;
         right = true;
+        up = false;
+        down = false;
     }
 
 	shuriken1.x = shuriken1.x + (2.5 * shuriken1.direction);
@@ -256,14 +275,14 @@ var update = function (modifier) {
         }
 
         if (
-            hero.x <= (shuriken2.x + 73)
-            && shuriken2.x <= (hero.x + 40)
+            hero.x <= (shuriken2.x + 65)
+            && shuriken2.x <= (hero.x + 22)
             && hero.y <= (shuriken2.y + 73)
-            && shuriken2.y <= (hero.y + 30)
+            && shuriken2.y <= (hero.y + 25)
         ) {
             soundNoises.src = gameOver;
-            soundNoises.play(); 
-            alert('You made an oopsies. Try again?')
+            // soundNoises.play(); 
+            // alert('You made an oopsies. Try again?')
             keysDown = {};
             monstersCaught = 0;
             reset();
@@ -301,11 +320,20 @@ var update = function (modifier) {
         //if the right is true, pick Y dim of the correct row
         if (right) {
             //calculating y coordinate for spritesheet
-            srcY = trackRight * oneSpriteHeight;
+            srcY = trackRight * oneSpriteHeight;   
         }
-        if (left == false && right == false) {
-            srcX = 1 * oneSpriteWidth;
-            srcY = 2 * oneSpriteHeight;
+        if (up) {
+            //calculate srcY
+            srcY = trackUp * oneSpriteHeight;
+        }
+        //if the right is true, pick Y dim of the correct row
+        if (down) {
+            //calculating y coordinate for spritesheet
+            srcY = trackDown * oneSpriteHeight;
+        }
+        if (left == false && right == false && up == false && down == false) {
+            srcX = 0 * oneSpriteWidth;
+            srcY = 0 * oneSpriteHeight;
         }
 
 };
@@ -397,6 +425,15 @@ var reset = function () {
 // hedge on left 32 + hedge 32 + char 32 = 96
     monster.x = 20 + (Math.random() * (canvas.width - 150));
     monster.y = 20 + (Math.random() * (canvas.height - 148));
+    
+    shuriken1.x = 20 + (Math.random() * (canvas.width - 150));
+    shuriken1.y = 20 + (Math.random() * (canvas.height - 148));
+
+    shuriken2.x = 20 + (Math.random() * (canvas.width - 150));
+    shuriken2.y = 20 + (Math.random() * (canvas.height - 148));
+
+    shuriken3.x = 20 + (Math.random() * (canvas.width - 150));
+    shuriken3.y = 20 + (Math.random() * (canvas.height - 148));
     }
     if(monstersCaught === 3) {
         keysDown = {}
@@ -417,3 +454,4 @@ var reset = function () {
 var then = Date.now();
 reset();
 main();  // call the main game loop.
+}
