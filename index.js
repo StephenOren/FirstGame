@@ -64,6 +64,14 @@ shurikenImage.onload = function () {
 };
 shurikenImage.src = "images/shuriken.png";
 
+//Fire image obstacle
+let flamesReady = false;
+let flamesImage = new Image();
+flamesImage.onload = function () {
+    flamesReady = true;
+}
+flamesImage.src = 'images/flame.png';
+
 
 var rows = 4;
 var cols = 4;
@@ -126,6 +134,23 @@ var shuriken3 = {
         y: 700,
         direction: -1
     };
+
+//These are going to be stationary flame objects
+
+var flame1 = {
+    x: 0,
+    y: 0
+};
+
+var flame2 = {
+    x: 0,
+    y: 0
+};
+
+var flame3 = {
+    x: 0,
+    y: 0
+};
 
 var monstersCaught = 0;
     
@@ -281,8 +306,8 @@ var update = function (modifier) {
             && shuriken2.y <= (hero.y + 25)
         ) {
             soundNoises.src = gameOver;
-            // soundNoises.play(); 
-            // alert('You made an oopsies. Try again?')
+            soundNoises.play(); 
+            alert('You made an oopsies. Try again?')
             keysDown = {};
             monstersCaught = 0;
             reset();
@@ -301,7 +326,47 @@ var update = function (modifier) {
             monstersCaught = 0;
             reset();
         }
+        if (
+            hero.x <= (flame1.x + 100)
+            && flame1.x <= (hero.x + -20)
+            && hero.y <= (flame1.y + 95)
+            && flame1.y <= (hero.y + 25)
+        ) {
+            soundNoises.src = gameOver;
+            soundNoises.play(); 
+            alert('You made an oopsies. Try again?')
+            keysDown = {}
+            monstersCaught = 0;
+            reset();
+        }
 
+        if (
+            hero.x <= (flame2.x + 100)
+            && flame2.x <= (hero.x + -20)
+            && hero.y <= (flame2.y + 95)
+            && flame2.y <= (hero.y + 25)
+        ) {
+            soundNoises.src = gameOver;
+            soundNoises.play(); 
+            alert('You made an oopsies. Try again?')
+            keysDown = {}
+            monstersCaught = 0;
+            reset();
+        }
+
+        if (
+            hero.x <= (flame3.x + 100)
+            && flame3.x <= (hero.x + -20)
+            && hero.y <= (flame3.y + 95)
+            && flame3.y <= (hero.y + 25)
+        ) {
+            soundNoises.src = gameOver;
+            soundNoises.play(); 
+            alert('You made an oopsies. Try again?')
+            keysDown = {}
+            monstersCaught = 0;
+            reset();
+        }
 
         if (counter == 10) { // adjust this to change "walking speed" of animation
             curXFrame = ++curXFrame % framesPerRowCount; //Updating the sprite frame index
@@ -377,6 +442,12 @@ var render = function () {
         ctx.drawImage(shurikenImage, shuriken2.x, shuriken2.y);
         ctx.drawImage(shurikenImage, shuriken3.x, shuriken3.y);
     }
+
+    if (flamesReady) {
+        ctx.drawImage(flamesImage, flame1.x, flame1.y);
+        ctx.drawImage(flamesImage, flame2.x, flame2.y);
+        ctx.drawImage(flamesImage, flame3.x, flame3.y);
+    }
     // Score
     ctx.fillStyle = "white";
     ctx.font = "24px Helvetica";
@@ -418,6 +489,15 @@ var reset = function () {
     hero.y = (canvas.height / 2) - 16;
     monster.x = 20 + (Math.random() * (canvas.width - 150));
     monster.y = 20 + (Math.random() * (canvas.height - 148));
+
+    flame1.x = 20 + (Math.random() * (canvas.width - 150));
+    flame1.y = 20 + (Math.random() * (canvas.height - 148));
+
+    flame2.x = 20 + (Math.random() * (canvas.width - 150));
+    flame2.y = 20 + (Math.random() * (canvas.height - 148));
+
+    flame3.x = 20 + (Math.random() * (canvas.width - 150));
+    flame3.y = 20 + (Math.random() * (canvas.height - 148));
     }
     if(monstersCaught > 0){
 //Place the monster somewhere on the screen randomly
@@ -425,15 +505,16 @@ var reset = function () {
 // hedge on left 32 + hedge 32 + char 32 = 96
     monster.x = 20 + (Math.random() * (canvas.width - 150));
     monster.y = 20 + (Math.random() * (canvas.height - 148));
+
+    flame1.x = 20 + (Math.random() * (canvas.width - 150));
+    flame1.y = 20 + (Math.random() * (canvas.height - 148));
+
+    flame2.x = 20 + (Math.random() * (canvas.width - 150));
+    flame2.y = 20 + (Math.random() * (canvas.height - 148));
+
+    flame3.x = 20 + (Math.random() * (canvas.width - 150));
+    flame3.y = 20 + (Math.random() * (canvas.height - 148));
     
-    shuriken1.x = 20 + (Math.random() * (canvas.width - 150));
-    shuriken1.y = 20 + (Math.random() * (canvas.height - 148));
-
-    shuriken2.x = 20 + (Math.random() * (canvas.width - 150));
-    shuriken2.y = 20 + (Math.random() * (canvas.height - 148));
-
-    shuriken3.x = 20 + (Math.random() * (canvas.width - 150));
-    shuriken3.y = 20 + (Math.random() * (canvas.height - 148));
     }
     if(monstersCaught === 3) {
         keysDown = {}
