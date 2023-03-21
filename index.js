@@ -181,8 +181,8 @@ var update = function (modifier) {
 
     if (38 in keysDown) { // Player holding up
         hero.y -= hero.speed * modifier;
-        if (hero.y < ( 32) ) {
-            hero.y = 32;
+        if (hero.y < ( 25) ) {
+            hero.y = 25;
         }
         left = false;
         right = false;
@@ -191,8 +191,8 @@ var update = function (modifier) {
     }
     if (40 in keysDown) { // Player holding down
         hero.y += hero.speed * modifier;
-        if (hero.y > (1000 - ( 70) )) {
-            hero.y = 1000 	 -70;
+        if (hero.y > (1000 - ( 80) )) {
+            hero.y = 1000 	 -80;
         }
         left = false;
         right = false;
