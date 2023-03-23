@@ -286,9 +286,9 @@ var update = function (modifier) {
         }
         //This is for when you get hit by the shuriken
         if (
-            hero.x <= (shuriken1.x + 73)
-            && shuriken1.x <= (hero.x + 40)
-            && hero.y <= (shuriken1.y + 73)
+            hero.x <= (shuriken1.x + 70)
+            && shuriken1.x <= (hero.x + 25)
+            && hero.y <= (shuriken1.y + 60)
             && shuriken1.y <= (hero.y + 30)
         ) {
             soundNoises.src = gameOver;
@@ -300,10 +300,10 @@ var update = function (modifier) {
         }
 
         if (
-            hero.x <= (shuriken2.x + 65)
-            && shuriken2.x <= (hero.x + 22)
-            && hero.y <= (shuriken2.y + 73)
-            && shuriken2.y <= (hero.y + 25)
+            hero.x <= (shuriken2.x + 70)
+            && shuriken2.x <= (hero.x + 25)
+            && hero.y <= (shuriken2.y + 60)
+            && shuriken2.y <= (hero.y + 30)
         ) {
             soundNoises.src = gameOver;
             soundNoises.play(); 
@@ -314,9 +314,9 @@ var update = function (modifier) {
         }
 
         if (
-            hero.x <= (shuriken3.x + 73)
-            && shuriken3.x <= (hero.x + 40)
-            && hero.y <= (shuriken3.y + 73)
+            hero.x <= (shuriken3.x + 70)
+            && shuriken3.x <= (hero.x + 25)
+            && hero.y <= (shuriken3.y + 60)
             && shuriken3.y <= (hero.y + 30)
         ) {
             soundNoises.src = gameOver;
