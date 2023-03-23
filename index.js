@@ -277,7 +277,7 @@ var update = function (modifier) {
             hero.x <= (monster.x + 40)
             && monster.x <= (hero.x + 20)
             && hero.y <= (monster.y + 90)
-            && monster.y <= (hero.y + 35)
+            && monster.y <= (hero.y + 40)
         ) {
             soundNoises.src = ninjaCaught; // Plays this sound whenever the two sprites are touching.
             soundNoises.play();
